@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -26,13 +28,16 @@ public class GUIChatClient extends JFrame implements ActionListener, Runnable{
 	TextArea txt_list;
 	CardLayout card;
 	
-	//테스트1-------------------------------------------------변경1
+	//테스트1-------------------------------------------------변경2
 	String ip_txt;                             // IP를 저장할변수
 	Socket sock;
 	final int PORT=7500;
 	PrintWriter pw=null;                  //송신스트림
 	BufferedReader br=null;             //수신스트림
 	//테스트1-------------------------------------------------
+	//테스트2-------------------------------------------------
+	OutputStream os=null;
+	//테스트2-------------------------------------------------
 	
 	
 	public GUIChatClient()
@@ -127,8 +132,13 @@ public class GUIChatClient extends JFrame implements ActionListener, Runnable{
 		try{
 			sock=new Socket(ip_txt, PORT);
 			
-			
-			
+			//테스트2(송신)---------------------------------------
+			String nickname=txt_name.getText();
+			os=sock.getOutputStream();
+			pw=new PrintWriter(new OutputStreamWriter(os));
+			pw.println(nickname);                 //주의)pw.print();   -----X
+			pw.flush();			
+			//테스트2(송신)---------------------------------------
 		}catch(IOException e){
 			e.printStackTrace();
 		}		
